@@ -1,7 +1,11 @@
 # Dont take ide settings
 p2p_message_network/.idea/
 
+# Dont keep the output
 p2p_message_network/out/
+
+# Allow for the json lib
+!p2p_message_network/lib/
 
 # Compiled class file
 *.class
