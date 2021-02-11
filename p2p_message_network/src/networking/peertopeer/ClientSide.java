@@ -1,6 +1,7 @@
 package networking.peertopeer;
 
 import networking.data.Message;
+import networking.exception.PeerException;
 import networking.utils.Utils;
 
 import javax.json.Json;
@@ -21,7 +22,7 @@ public class ClientSide extends Thread {
      * @param socket The socket this client is connected to
      * @param peer The peerside of this client
      */
-    public ClientSide(Socket socket, Peer peer) {
+    public ClientSide(Socket socket, Peer peer) throws PeerException {
         try {
             this.socket = socket;
             this.peerSide = peer;
@@ -30,11 +31,16 @@ public class ClientSide extends Thread {
             this.inStream = new ObjectInputStream(socket.getInputStream());
         }
         catch (Exception e){
-            System.err.println("Could not start client side");
+            throw new PeerException("Could not start client side");
         }
     }
 
-    public void sayHello(String address) {
+    /**
+     * Sends the server a hello message with this peer's address so the other peer can establish a conncetion back
+     * @param address This peer's address
+     * @throws PeerException If an error occurs
+     */
+    public void sayHello(String address) throws PeerException {
         try {
             Message msg_hello = new Message();
             msg_hello.setOp(Message.Operation.OP_NEW_CONNECTION);
@@ -44,32 +50,30 @@ public class ClientSide extends Thread {
             outStream.writeObject(msg_hello);
         }
         catch (Exception e){
-            System.err.println("Could not establish connection with another peer");
+            throw new PeerException("Could not establish connection with another peer");
         }
     }
 
     public void run() {
         try {
             while (true) {
-                try {
-                    Message msg_received = (Message) inStream.readObject();
 
-                    if (msg_received != null && msg_received.getOp() == Message.Operation.OP_MESSAGE){
-                        JsonObject jsonObject = Json.createReader(new StringReader(msg_received.getContents())).readObject();
+                Message msg_received = (Message) inStream.readObject();
 
-                        if (jsonObject.containsKey("username")){
-                            System.out.println("[" + jsonObject.getString("username") + "]: " +
-                                    jsonObject.getString("message"));
-                        }
+                if (msg_received != null && msg_received.getOp() == Message.Operation.OP_MESSAGE){
+                    JsonObject jsonObject = Json.createReader(new StringReader(msg_received.getContents())).readObject();
+
+                    if (jsonObject.containsKey("username")){
+
+                        //todo - put on gui?
+
+                        System.out.println("[" + jsonObject.getString("username") + "]: " +
+                                jsonObject.getString("message"));
                     }
-
-                } catch (Exception e) {
-                    interrupt();
                 }
             }
-        }
-        catch (Exception e) {
-
+        } catch (Exception e) {
+            interrupt();
         }
     }
 

@@ -1,6 +1,7 @@
 package networking.peertopeer;
 
 import networking.data.Message;
+import networking.exception.PeerException;
 import networking.utils.Utils;
 
 import java.io.*;
@@ -14,7 +15,7 @@ public class ServerSideThread extends Thread {
     private ObjectOutputStream outStream;
     private ObjectInputStream inStream;
 
-    public ServerSideThread(Socket socket, ServerSide serverSide){
+    public ServerSideThread(Socket socket, ServerSide serverSide) throws PeerException {
         try {
             this.serverSide = serverSide;
             this.socket = socket;
@@ -23,7 +24,7 @@ public class ServerSideThread extends Thread {
             this.inStream = new ObjectInputStream(socket.getInputStream());
         }
         catch (Exception e){
-            System.err.println("Could not start server side thread");
+            throw new PeerException("Could not start server side thread");
         }
     }
 
