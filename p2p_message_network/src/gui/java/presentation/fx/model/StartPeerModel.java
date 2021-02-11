@@ -98,13 +98,11 @@ public class StartPeerModel {
     /**
      * Clears the model's properties
      */
-    /*
     public void clearProperties() {
-        lessonName.set("");
-        startDay.set("");
-        endDay.set("");
-        maxParticipants.set(0);
+        username.set("");
+        port.set("");
+        trackerIp.set("");
+        trackerPort.set("");
+        peersAddresses.set("");
     }
-
-     */
 }

@@ -1,19 +1,29 @@
 package gui.java.presentation.fx.inputcontroller;
 
+import gui.java.presentation.fx.model.ChatWindowModel;
+import gui.java.presentation.fx.model.StartPeerModel;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
-import javafx.util.converter.NumberStringConverter;
+import networking.exception.PeerException;
+import networking.peertopeer.Peer;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 /**
- * Executes a gui controller for the activate lesson use case
+ * Executes a gui controller for the peer connection window
  */
 public class StartPeerController extends BaseController implements Initializable {
 
@@ -22,6 +32,15 @@ public class StartPeerController extends BaseController implements Initializable
 
     @FXML
     private TextField portField;
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private Tab tabAutomatic;
+
+    @FXML
+    private Tab tabManual;
 
     @FXML
     private TextField trackerIpField;
@@ -35,9 +54,9 @@ public class StartPeerController extends BaseController implements Initializable
     @FXML
     private Button connectPeerBtn;
 
-    //private ActivateLessonModel activateLessonModel;
+    private StartPeerModel startPeerModel;
 
-    //private IActivateLessonServiceRemote activateLessonService;
+    private boolean connectToTrackerServer;
 
     /**
      * Initializes the controller after its root element has been completely processed.
@@ -48,6 +67,13 @@ public class StartPeerController extends BaseController implements Initializable
     public void initialize(URL url, ResourceBundle rb) {
         setI18NBundle(rb);
 
+        // Limit the characters in these fields
+        limitMaxLength(usernameField, 15);
+        limitMaxLength(portField, 5);
+        limitMaxLength(trackerIpField, 15);
+        limitMaxLength(trackerPortField, 5);
+
+        // Only allow for numbers
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String newText = change.getControlNewText();
             if (newText.matches("[0-9]*")) {
@@ -55,10 +81,24 @@ public class StartPeerController extends BaseController implements Initializable
             }
             return null;
         };
-
         portField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(),0, integerFilter));
         trackerPortField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(),0, integerFilter));
 
+        //set automatic as default
+        tabPane.getSelectionModel().select(tabAutomatic);
+        connectToTrackerServer = true;
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if(newTab.equals (tabAutomatic)) {
+                connectToTrackerServer = true;
+            }
+            else if(newTab.equals (tabManual)) {
+                connectToTrackerServer = false;
+            }
+            clearTabFields();
+        });
+
+        // All needed fields should be filled
         BooleanBinding booleanBind = usernameField.textProperty().isEmpty()
                 .or(portField.textProperty().isEmpty())
                 .or((
@@ -68,88 +108,76 @@ public class StartPeerController extends BaseController implements Initializable
                 ));
 
         connectPeerBtn.disableProperty().bind(booleanBind);
+    }
 
+    private void limitMaxLength(TextField textField ,int limit) {
+        textField.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                // Check if the new character is greater than LIMIT
+                if (textField.getText().length() >= limit) {
+                    textField.setText(textField.getText().substring(0, limit));
+                }
+            }
+        });
+    }
+
+    private void clearTabFields() {
+        trackerIpField.textProperty().set("");
+        trackerPortField.textProperty().set("");
+        peersAddressesField.textProperty().set("");
     }
 
     /**
-     * Sets the model and the bidirectional bindings for the activate lesson use case
+     * Sets the model and the bidirectional bindings for the peer connection window
      * @param model The model to be set
      */
-    /*public void setModel(ActivateLessonModel model) {
-        this.activateLessonModel = model;
+    public void setModel(StartPeerModel model) {
+        this.startPeerModel = model;
 
-        spaceComboBox.setItems(activateLessonModel.getSpaces());
-        spaceComboBox.setValue(activateLessonModel.getSelectedSpace());
+        usernameField.textProperty().bindBidirectional(startPeerModel.usernameProperty());
+        portField.textProperty().bindBidirectional(startPeerModel.portProperty());
 
-        lessonNameField.textProperty().bindBidirectional(activateLessonModel.lessonNameProperty());
+        trackerIpField.textProperty().bindBidirectional(startPeerModel.trackerIpProperty());
+        trackerPortField.textProperty().bindBidirectional(startPeerModel.trackerPortProperty());
 
-        startDatePicker.getEditor().textProperty().bindBidirectional(activateLessonModel.startDayProperty());
-
-        endDatePicker.getEditor().textProperty().bindBidirectional(activateLessonModel.endDayProperty());
-
-        maxParticipantsSpinner.getEditor().textProperty().bindBidirectional(activateLessonModel.maxParticipantsProperty(), new NumberStringConverter());
+        peersAddressesField.textProperty().bindBidirectional(startPeerModel.peersAddressesProperty());
     }
 
-     */
-
     /**
-     * Sets the remote service for the activate lesson use case
-     * @param activateLessonService The remote service to be set
-     */
-    /*public void setActivateLessonService(IActivateLessonServiceRemote activateLessonService) {
-        this.activateLessonService = activateLessonService;
-    }*/
-
-
-
-    /**
-     * Determines what happens when the activate lesson button is pressed
+     * Determines what happens when the connect peer button is pressed
      * @param event The event called
      */
-    /*@FXML
-    void activateLessonAction(ActionEvent event) {
-        String errorMessages = validateInput();
-
-        if (errorMessages.length() == 0) {
-            try {
-                activateLessonService.activateLesson(activateLessonModel.getLessonName(), activateLessonModel.getSelectedSpace(),
-                        activateLessonModel.getStartDay(), activateLessonModel.getEndDay(), activateLessonModel.getMaxParticipants());
-                activateLessonModel.clearProperties();
-
-                showInfo(i18nBundle.getString("activate.lesson.success"));
-
-            } catch (ApplicationException e) {
-                showError(i18nBundle.getString("activate.lesson.error.creating") + ": " + e.getMessage());
+    @FXML
+    void connectPeerAction(ActionEvent event) throws IOException {
+        try {
+            Peer peer = new Peer(startPeerModel.getUsername(), startPeerModel.getPort());
+            String[] addresses;
+            if (connectToTrackerServer){
+                addresses = peer.connectToTracker(startPeerModel.getTrackerIp(), startPeerModel.getTrackerPort());
             }
+            else {
+                addresses = startPeerModel.getPeersAddresses().split(" ");
+            }
+            peer.connectToPeers(addresses);
 
-        } else
-            showError(i18nBundle.getString("activate.lesson.error.validating") + ":\n" + errorMessages);
-    }
-     */
-
-    /**
-     * Checks if the input, i.e, the lesson name is valid
-     * @return Error message if the input is invalid, else, an empty string
-     */
-    /*private String validateInput() {
-        StringBuilder sb = new StringBuilder();
-        String lessonName = activateLessonModel.getLessonName();
-        if (lessonName.length() != 6) {
-            sb.append(i18nBundle.getString("lesson.invalid.designation.size"));
+            openChatWindow(peer);
+        } catch (PeerException e) {
+            showError(i18nBundle.getString("new.peer.error.creating") + ":\n" + e.getMessage());
         }
-        return sb.toString();
     }
 
-     */
+    private void openChatWindow(Peer peer) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/resources/fxml/chatWindow.fxml"), i18nBundle);
+        Parent root = fxmlLoader.load();
 
-    /**
-     * Determines what happens when a space is selected
-     * @param actionEvent The event called
-     */
-    /*@FXML
-    public void spaceSelected(ActionEvent actionEvent) {
-        activateLessonModel.setSelectedSpace(spaceComboBox.getValue());
+        ChatWindowController chatWindowController = fxmlLoader.getController();
+        ChatWindowModel chatWindowModel = new ChatWindowModel();
+        chatWindowController.setModel(chatWindowModel);
+        chatWindowController.setPeer(peer);
+
+        Stage stage = (Stage) connectPeerBtn.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.getScene().getWindow().centerOnScreen();
     }
-
-     */
 }

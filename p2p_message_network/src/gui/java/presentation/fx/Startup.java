@@ -28,25 +28,8 @@ public class Startup extends Application {
 		Parent root = fxmlLoader.load();
 
 		StartPeerController startPeerController = fxmlLoader.getController();
-
 		StartPeerModel startPeerModel = new StartPeerModel();
-
-		//startPeerController.setModel(startPeerModel);
-
-
-
-		/*
-		CreateLessonModel createLessonModel = new CreateLessonModel(newLessonService);
-		ActivateLessonModel activateLessonModel = new ActivateLessonModel(activateLessonService);
-
-		mainSceneController.setModels(createLessonModel, activateLessonModel);
-		mainSceneController.setServices(newLessonService, activateLessonService);
-		 */
-
-		/** MainSceneController does not need the bundle **/
-		//mainSceneController.setI18NBundle(i18nBundle);
-
-
+		startPeerController.setModel(startPeerModel);
 
 		stage.setScene(new Scene(root));
 		stage.setTitle(i18nBundle.getString("application.title"));

@@ -1,5 +1,6 @@
 package networking.peertopeer;
 
+import gui.java.presentation.fx.inputcontroller.ChatWindowController;
 import networking.data.Message;
 import networking.exception.PeerException;
 import networking.utils.Utils;
@@ -18,6 +19,8 @@ public class Peer {
     private String address;
     private boolean needToGreetPeer;
     private ServerSide serverSide;
+
+    private ChatWindowController chatWindowController;
 
     /**
      * Constructor
@@ -40,20 +43,24 @@ public class Peer {
         }
     }
 
+    public void setChatWindowController(ChatWindowController chatWindowController) {
+        this.chatWindowController = chatWindowController;
+    }
+
     /**
      * Connects the peer to the tracker server and gets all necessary info
-     * @param trackerServerAddress Address of the tracker server in the form of ip:port
+     * @param trackerIp Ip of the tracker server
+     * @param trackerPort Port of the tracker server
      * @return String[] containing the addresses of the other peers
      */
-    public String[] connectToTracker(String trackerServerAddress) throws PeerException {
+    public String[] connectToTracker(String trackerIp, String trackerPort) throws PeerException {
         this.needToGreetPeer = true;
 
-        String[] addressValues = trackerServerAddress.split(":");
         Socket socket;
         ObjectOutputStream outStream;
         ObjectInputStream inStream;
         try {
-            socket = new Socket(addressValues[0], Integer.parseInt(addressValues[1]));
+            socket = new Socket(trackerIp, Integer.parseInt(trackerPort));
 
             outStream = new ObjectOutputStream(socket.getOutputStream());
             inStream = new ObjectInputStream(socket.getInputStream());
@@ -87,7 +94,6 @@ public class Peer {
     /**
      * Connects to all other peers and sends them a hello message
      * @param peersAddress The list of addresses of the other peers
-     * @param greetPeer A boolean that defines if the peers to who this peer connects should receive a hello message
      * @return True if it connects to all peers correctly.
      * False if no addresses were given or if an error occurs
      */
@@ -142,5 +148,18 @@ public class Peer {
         msg.setContents(json.toString());
 
         serverSide.sendMessage(msg);
+    }
+
+    public void receiveMessage(String user, String msg){
+        if (chatWindowController == null) {
+            System.out.println("[" + user + "]: " + msg);
+        }
+        else {
+            chatWindowController.receiveMessage(user, msg);
+        }
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

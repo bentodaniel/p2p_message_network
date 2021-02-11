@@ -9,7 +9,8 @@ import java.net.Inet4Address;
 
 public class TempClient {
     public static void main(String[] args) {
-        String trackerAddress = "localhost:55555";
+        String trackerIp = "localhost";
+        String trackerPort = "55555";
 
         Peer peer1 = null;
         Peer peer2 = null;
@@ -18,7 +19,7 @@ public class TempClient {
         /** PPER 1 */
         try {
             peer1 = new Peer("A", "1111");
-            String[] adds = peer1.connectToTracker(trackerAddress);
+            String[] adds = peer1.connectToTracker(trackerIp, trackerPort);
             peer1.connectToPeers(adds);
         }
         catch (Exception e){
@@ -26,27 +27,26 @@ public class TempClient {
         }
 
         /** PEER 2 */
-        try {
+        /*try {
             peer2 = new Peer("B", "2222");
-            String[] adds = peer2.connectToTracker(trackerAddress);
+            String[] adds = peer2.connectToTracker(trackerIp, trackerPort);
             peer2.connectToPeers(adds);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
-        }
+        }*/
 
         /** PEER 3 */
-        try {
+        /*try {
             peer3 = new Peer("C", "3333");
-            String[] adds = peer3.connectToTracker(trackerAddress);
+            String[] adds = peer3.connectToTracker(trackerIp, trackerPort);
             peer3.connectToPeers(adds);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
-        }
+        }*/
 
-
-
+/*
         try {
             peer1.communicate("OLA FROM A");
         }
@@ -73,7 +73,7 @@ public class TempClient {
         }
         catch (Exception e) {
             System.out.println("cant communicate a");
-        }
+        }*/
 
 
         /*

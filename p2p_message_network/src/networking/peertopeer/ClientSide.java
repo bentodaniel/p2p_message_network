@@ -64,11 +64,7 @@ public class ClientSide extends Thread {
                     JsonObject jsonObject = Json.createReader(new StringReader(msg_received.getContents())).readObject();
 
                     if (jsonObject.containsKey("username")){
-
-                        //todo - put on gui?
-
-                        System.out.println("[" + jsonObject.getString("username") + "]: " +
-                                jsonObject.getString("message"));
+                        peerSide.receiveMessage(jsonObject.getString("username"), jsonObject.getString("message"));
                     }
                 }
             }
