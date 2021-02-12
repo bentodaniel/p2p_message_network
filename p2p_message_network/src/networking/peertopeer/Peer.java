@@ -17,7 +17,6 @@ public class Peer {
     private String username;
     private String port;
     private String address;
-    private boolean needToGreetPeer;
     private ServerSide serverSide;
 
     private ChatWindowController chatWindowController;
@@ -33,7 +32,6 @@ public class Peer {
             this.username = username;
             this.port = port;
             this.address = Inet4Address.getLocalHost().getHostAddress() + ":" + port;
-            this.needToGreetPeer = false;
 
             this.serverSide = new ServerSide(port, this);
             this.serverSide.start();
@@ -54,8 +52,6 @@ public class Peer {
      * @return String[] containing the addresses of the other peers
      */
     public String[] connectToTracker(String trackerIp, String trackerPort) throws PeerException {
-        this.needToGreetPeer = true;
-
         Socket socket;
         ObjectOutputStream outStream;
         ObjectInputStream inStream;
@@ -94,10 +90,12 @@ public class Peer {
     /**
      * Connects to all other peers and sends them a hello message
      * @param peersAddress The list of addresses of the other peers
+     * @param needToGreetPeer A boolean that defines if, after connecting to a peer, the peer should connect back.
+     *                        Generally the use of true is advised
      * @return True if it connects to all peers correctly.
      * False if no addresses were given or if an error occurs
      */
-    public boolean connectToPeers(String[] peersAddress) throws PeerException {
+    public boolean connectToPeers(String[] peersAddress, boolean needToGreetPeer) throws PeerException {
         if (peersAddress == null){
             return false;
         }

@@ -16,14 +16,14 @@
             <Font size="15.0" />
         </font>
     </Label>
-    <TextField fx:id="usernameField" promptText="Ex: abc" layoutX="175.0" layoutY="52.0" prefHeight="30.0" prefWidth="167.0" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0" />
-   
+    <TextField fx:id="usernameField" layoutX="175.0" layoutY="52.0" prefHeight="30.0" prefWidth="167.0" promptText="Ex: abc" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="75.0" />
+
     <Label layoutX="29.0" layoutY="114.0" prefHeight="34.0" prefWidth="118.0" text="%label.this_peer_port" AnchorPane.topAnchor="125.0">
       <font>
          <Font size="15.0" />
       </font>
    </Label>
-   <TextField fx:id="portField" promptText="Ex: 12345" layoutX="154.0" layoutY="114.0" prefHeight="30.0" prefWidth="167.0" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="125.0" />
+   <TextField fx:id="portField" layoutX="154.0" layoutY="114.0" prefHeight="30.0" prefWidth="167.0" promptText="Ex: 12345" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="125.0" />
 
     <Label alignment="CENTER" layoutX="90.0" layoutY="173.0" text="%label.connection_details" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
         <font>
@@ -41,14 +41,14 @@
                            <Font size="15.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="trackerIpField" promptText="Ex: 255.255.255.255" layoutX="154.0" layoutY="20.0" prefHeight="30.0" prefWidth="167.0" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" />
+                     <TextField fx:id="trackerIpField" layoutX="154.0" layoutY="20.0" prefHeight="30.0" prefWidth="167.0" promptText="Ex: 255.255.255.255" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" />
 
                       <Label layoutX="33.0" layoutY="70.0" prefHeight="34.0" text="%label.tracker_port" AnchorPane.leftAnchor="25.0">
                         <font>
                            <Font size="15.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="trackerPortField" promptText="Ex: 12345" layoutX="154.0" layoutY="70.0" prefHeight="30.0" prefWidth="167.0" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" />
+                     <TextField fx:id="trackerPortField" layoutX="154.0" layoutY="70.0" prefHeight="30.0" prefWidth="167.0" promptText="Ex: 12345" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" />
                   </children></AnchorPane>
          </content>
        </Tab>
@@ -62,12 +62,13 @@
                               <Font size="15.0" />
                           </font>
                       </Label>
-                     <TextField fx:id="peersAddressesField" promptText="Ex: 0.0.0.0:00000 255.255.255.255:99999" layoutX="25.0" layoutY="40.0" prefHeight="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="50.0" />
+                     <TextField fx:id="peersAddressesField" layoutX="25.0" layoutY="40.0" prefHeight="30.0" promptText="Ex: 0.0.0.0:00000 255.255.255.255:99999" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="50.0" />
                   </children></AnchorPane>
          </content>
        </Tab>
      </tabs>
    </TabPane>
+   <CheckBox fx:id="freeConnectCheckbox" layoutX="402.0" layoutY="405.0" mnemonicParsing="false" text="%dont_connect_with_noone" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="25.0" />
 
-    <Button fx:id="connectPeerBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="390.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" text="%button.connect" AnchorPane.bottomAnchor="25.0" onAction="#connectPeerAction"/>
+    <Button fx:id="connectPeerBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="390.0" mnemonicParsing="false" onAction="#connectPeerAction" prefHeight="35.0" prefWidth="150.0" text="%button.connect" AnchorPane.bottomAnchor="25.0" />
 </AnchorPane>

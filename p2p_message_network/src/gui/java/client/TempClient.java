@@ -20,7 +20,7 @@ public class TempClient {
         try {
             peer1 = new Peer("A", "1111");
             String[] adds = peer1.connectToTracker(trackerIp, trackerPort);
-            peer1.connectToPeers(adds);
+            peer1.connectToPeers(adds, true);
         }
         catch (Exception e){
             System.out.println(e.getMessage());

@@ -52,6 +52,9 @@ public class StartPeerController extends BaseController implements Initializable
     private TextField peersAddressesField;
 
     @FXML
+    private CheckBox freeConnectCheckbox;
+
+    @FXML
     private Button connectPeerBtn;
 
     private StartPeerModel startPeerModel;
@@ -102,9 +105,9 @@ public class StartPeerController extends BaseController implements Initializable
         BooleanBinding booleanBind = usernameField.textProperty().isEmpty()
                 .or(portField.textProperty().isEmpty())
                 .or((
-                        (trackerIpField.textProperty().isEmpty()
-                                .or(trackerPortField.textProperty().isEmpty()))
-                                .and(peersAddressesField.textProperty().isEmpty())
+                        (trackerIpField.textProperty().isEmpty().or(trackerPortField.textProperty().isEmpty()))
+                        .and(peersAddressesField.textProperty().isEmpty())
+                        .and(freeConnectCheckbox.selectedProperty().not())
                 ));
 
         connectPeerBtn.disableProperty().bind(booleanBind);
@@ -141,6 +144,8 @@ public class StartPeerController extends BaseController implements Initializable
         trackerPortField.textProperty().bindBidirectional(startPeerModel.trackerPortProperty());
 
         peersAddressesField.textProperty().bindBidirectional(startPeerModel.peersAddressesProperty());
+
+        freeConnectCheckbox.selectedProperty().bindBidirectional(startPeerModel.dontConnectWithAnyoneProperty());
     }
 
     /**
@@ -149,18 +154,34 @@ public class StartPeerController extends BaseController implements Initializable
      */
     @FXML
     void connectPeerAction(ActionEvent event) throws IOException {
+        if (startPeerModel.getDontConnectWithAnyone()) {
+            showInfo(i18nBundle.getString("new.peer.warning.not_connecting"), this);
+        }
+        else {
+            startPeer(true);
+        }
+    }
+
+    public void startPeer(boolean hasConnection) {
+        //todo - check if the peer needs to connect
+
         try {
             Peer peer = new Peer(startPeerModel.getUsername(), startPeerModel.getPort());
-            String[] addresses;
-            if (connectToTrackerServer){
-                addresses = peer.connectToTracker(startPeerModel.getTrackerIp(), startPeerModel.getTrackerPort());
+
+            if (hasConnection) {
+                String[] addresses;
+                if (connectToTrackerServer) {
+                    addresses = peer.connectToTracker(startPeerModel.getTrackerIp(), startPeerModel.getTrackerPort());
+                } else {
+                    addresses = startPeerModel.getPeersAddresses().split(" ");
+                }
+                peer.connectToPeers(addresses, true);
             }
-            else {
-                addresses = startPeerModel.getPeersAddresses().split(" ");
-            }
-            peer.connectToPeers(addresses);
 
             openChatWindow(peer);
+
+        } catch (IOException e){
+            showError(i18nBundle.getString("new.peer.error.creating") + ":\nThere was an error starting the peer");
         } catch (PeerException e) {
             showError(i18nBundle.getString("new.peer.error.creating") + ":\n" + e.getMessage());
         }

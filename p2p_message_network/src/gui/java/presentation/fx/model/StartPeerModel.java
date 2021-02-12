@@ -1,5 +1,7 @@
 package gui.java.presentation.fx.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,6 +15,7 @@ public class StartPeerModel {
     private final StringProperty trackerIp;
     private final StringProperty trackerPort;
     private final StringProperty peersAddresses;
+    private final BooleanProperty dontConnectWithAnyone;
 
     /**
      * Executes the constructor for the model
@@ -24,6 +27,7 @@ public class StartPeerModel {
         this.trackerIp = new SimpleStringProperty();
         this.trackerPort = new SimpleStringProperty();
         this.peersAddresses = new SimpleStringProperty();
+        this.dontConnectWithAnyone = new SimpleBooleanProperty();
     }
 
     /** GETTERS */
@@ -46,6 +50,10 @@ public class StartPeerModel {
 
     public String getPeersAddresses() {
         return peersAddresses.get();
+    }
+
+    public boolean getDontConnectWithAnyone() {
+        return dontConnectWithAnyone.get();
     }
 
 
@@ -71,6 +79,10 @@ public class StartPeerModel {
         this.peersAddresses.set(peersAddresses);
     }
 
+    public void setDontConnectWithAnyone(boolean value) {
+        this.dontConnectWithAnyone.set(value);
+    }
+
 
     /** PROPERTIES */
 
@@ -94,6 +106,10 @@ public class StartPeerModel {
         return peersAddresses;
     }
 
+    public BooleanProperty dontConnectWithAnyoneProperty() {
+        return dontConnectWithAnyone;
+    }
+
 
     /**
      * Clears the model's properties
@@ -104,5 +120,6 @@ public class StartPeerModel {
         trackerIp.set("");
         trackerPort.set("");
         peersAddresses.set("");
+        dontConnectWithAnyone.set(false);
     }
 }

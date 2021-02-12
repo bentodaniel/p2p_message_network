@@ -9,10 +9,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import networking.peertopeer.Peer;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -70,19 +73,26 @@ public class ChatWindowController extends BaseController implements Initializabl
 
     /**
      * Determines what happens when the send button is pressed
-     * @param event The event called
      */
     @FXML
-    private void sendMessageAction(ActionEvent event) {
+    private void sendMessageAction() {
         String msg = messageBox.getText();
         peer.communicate(msg);
-        chatWindowModel.clearProperties();
+        messageBox.clear();
 
         chatMessages.add(new HBoxCell(peer.getUsername(), msg, true));
     }
 
+    @FXML
+    public void sendMethod(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            event.consume();
+            sendMessageAction();
+        }
+    }
+
     public void receiveMessage(String username, String msg){
-        chatMessages.add(new HBoxCell(peer.getUsername(), msg, false));
+        chatMessages.add(new HBoxCell(username, msg, false));
     }
 
     public static class HBoxCell extends HBox {
@@ -103,7 +113,7 @@ public class ChatWindowController extends BaseController implements Initializabl
                 messageText.setText(msgTxt);
             }
             else {
-                usernameText.setText(usernameTxt);
+                usernameText.setText("[" + usernameTxt + "] : ");
                 messageText.setText(msgTxt);
             }
         }

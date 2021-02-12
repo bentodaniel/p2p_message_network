@@ -17,12 +17,16 @@ public class BaseController {
 		alert.showAndWait(); 
 	}
 
-	public void showInfo(String message) {
-		Alert alert = new Alert(AlertType.INFORMATION);
+	public void showInfo(String message, StartPeerController startPeerController) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(i18nBundle.getString("info.dialog.title"));
 		alert.setHeaderText(null);
 		alert.setContentText(message);
-		alert.showAndWait();
+		alert.showAndWait().ifPresent(response -> {
+			if (response.getText().toLowerCase().equals("ok")) {
+				startPeerController.startPeer(false);
+			}
+		});
 	}
 
 	public void setI18NBundle(ResourceBundle i18nBundle) {
