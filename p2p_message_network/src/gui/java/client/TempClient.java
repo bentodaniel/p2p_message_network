@@ -18,7 +18,7 @@ public class TempClient {
 
         /** PPER 1 */
         try {
-            peer1 = new Peer("A", "1111");
+            peer1 = new Peer("A", "localhost","1111");
             String[] adds = peer1.connectToTracker(trackerIp, trackerPort);
             peer1.connectToPeers(adds, true);
         }

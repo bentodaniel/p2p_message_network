@@ -15,6 +15,7 @@ import java.util.List;
 public class Peer {
 
     private String username;
+    private String ip;
     private String port;
     private String address;
     private ServerSide serverSide;
@@ -27,14 +28,12 @@ public class Peer {
      * @param port This peer's port
      * @throws PeerException If an error occurs
      */
-    public Peer(String username, String port) throws PeerException {
+    public Peer(String username, String ip, String port) throws PeerException {
         try {
             this.username = username;
             this.port = port;
-            this.address = Utils.getPublicIP() + ":" + port;
-            // this does not work with real server
-
-            System.out.println(Utils.getPublicIP());
+            this.ip = ip;
+            this.address = ip + ":" + port;
 
             this.serverSide = new ServerSide(port, this);
             this.serverSide.start();

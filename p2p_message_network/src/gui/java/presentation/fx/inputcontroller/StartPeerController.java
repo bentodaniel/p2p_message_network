@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import networking.exception.PeerException;
@@ -32,7 +34,7 @@ public class StartPeerController extends BaseController implements Initializable
     private TextField usernameField;
 
     @FXML
-    private TextField ipField;
+    private ComboBox<String> ipComboBox;
 
     @FXML
     private TextField portField;
@@ -76,13 +78,13 @@ public class StartPeerController extends BaseController implements Initializable
 
         // Limit the characters in these fields
         limitMaxLength(usernameField, 15);
-        limitMaxLength(ipField, 15);
         limitMaxLength(portField, 5);
         limitMaxLength(trackerIpField, 15);
         limitMaxLength(trackerPortField, 5);
 
+        ipComboBox.getItems().add("127.0.0.1");
         try {
-            ipField.promptTextProperty().set("Public: " + Utils.getPublicIP());
+            ipComboBox.getItems().add(Utils.getPublicIP());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,6 +151,8 @@ public class StartPeerController extends BaseController implements Initializable
         this.startPeerModel = model;
 
         usernameField.textProperty().bindBidirectional(startPeerModel.usernameProperty());
+        ipComboBox.valueProperty().bindBidirectional(startPeerModel.ipProperty());
+        ipComboBox.getSelectionModel().select(0);
         portField.textProperty().bindBidirectional(startPeerModel.portProperty());
 
         trackerIpField.textProperty().bindBidirectional(startPeerModel.trackerIpProperty());
@@ -177,7 +181,7 @@ public class StartPeerController extends BaseController implements Initializable
         //todo - check if the peer needs to connect
 
         try {
-            Peer peer = new Peer(startPeerModel.getUsername(), startPeerModel.getPort());
+            Peer peer = new Peer(startPeerModel.getUsername(), startPeerModel.getIp(), startPeerModel.getPort());
 
             if (hasConnection) {
                 String[] addresses;
@@ -212,4 +216,5 @@ public class StartPeerController extends BaseController implements Initializable
         stage.setScene(scene);
         stage.getScene().getWindow().centerOnScreen();
     }
+
 }

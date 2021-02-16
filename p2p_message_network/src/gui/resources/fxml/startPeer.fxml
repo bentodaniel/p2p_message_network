@@ -23,7 +23,7 @@
          <Font size="15.0" />
       </font>
    </Label>
-   <TextField fx:id="ipField" layoutX="154.0" layoutY="114.0" prefHeight="30.0" prefWidth="167.0" promptText="Private: 127.0.0.1" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="125.0" />
+   <ComboBox fx:id="ipComboBox" layoutX="175.0" layoutY="129.0" prefHeight="30.0" prefWidth="150.0" AnchorPane.leftAnchor="175.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="125.0" />
 
     <Label layoutX="29.0" layoutY="176.0" prefHeight="34.0" prefWidth="118.0" text="%label.this_peer_port" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="175.0">
       <font>

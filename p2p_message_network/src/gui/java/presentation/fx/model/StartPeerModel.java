@@ -1,9 +1,7 @@
 package gui.java.presentation.fx.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.scene.control.SingleSelectionModel;
 
 /**
  * Executes a gui model to start a peer
@@ -11,6 +9,7 @@ import javafx.beans.property.StringProperty;
 public class StartPeerModel {
 
     private final StringProperty username;
+    private final StringProperty ip;
     private final StringProperty port;
     private final StringProperty trackerIp;
     private final StringProperty trackerPort;
@@ -23,6 +22,7 @@ public class StartPeerModel {
      */
     public StartPeerModel(){
         this.username = new SimpleStringProperty();
+        this.ip = new SimpleStringProperty();
         this.port = new SimpleStringProperty();
         this.trackerIp = new SimpleStringProperty();
         this.trackerPort = new SimpleStringProperty();
@@ -34,6 +34,10 @@ public class StartPeerModel {
 
     public String getUsername() {
         return username.get();
+    }
+
+    public String getIp() {
+        return ip.get();
     }
 
     public String getPort() {
@@ -63,6 +67,10 @@ public class StartPeerModel {
         this.username.set(username);
     }
 
+    public void setIp(String ip) {
+        this.ip.set(ip);
+    }
+
     public void setPort(String port) {
         this.port.set(port);
     }
@@ -88,6 +96,10 @@ public class StartPeerModel {
 
     public StringProperty usernameProperty() {
         return username;
+    }
+
+    public StringProperty ipProperty() {
+        return ip;
     }
 
     public StringProperty portProperty() {
@@ -116,6 +128,7 @@ public class StartPeerModel {
      */
     public void clearProperties() {
         username.set("");
+        //should clear the ip field?
         port.set("");
         trackerIp.set("");
         trackerPort.set("");
