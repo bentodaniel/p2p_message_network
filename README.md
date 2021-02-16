@@ -25,14 +25,14 @@ This system can be used in two ways:
      - Connect;
      
 ## Screenshots
-![](screenshots/connect_screen)
+![](/screenshots/connect_screen_1.PNG)
 
 &nbsp;
 &nbsp;
 
-![](screenshots/connect_screen_2.png)
+![](/screenshots/connect_screen_2.PNG)
 
 &nbsp;
 &nbsp;
 
-![](screenshots/chat_screen_A.png)
+![](/screenshots/chat_screen_A.PNG)
