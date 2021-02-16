@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import networking.exception.PeerException;
 import networking.peertopeer.Peer;
+import networking.utils.Utils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +30,9 @@ public class StartPeerController extends BaseController implements Initializable
 
     @FXML
     private TextField usernameField;
+
+    @FXML
+    private TextField ipField;
 
     @FXML
     private TextField portField;
@@ -72,9 +76,16 @@ public class StartPeerController extends BaseController implements Initializable
 
         // Limit the characters in these fields
         limitMaxLength(usernameField, 15);
+        limitMaxLength(ipField, 15);
         limitMaxLength(portField, 5);
         limitMaxLength(trackerIpField, 15);
         limitMaxLength(trackerPortField, 5);
+
+        try {
+            ipField.promptTextProperty().set("Public: " + Utils.getPublicIP());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Only allow for numbers
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {

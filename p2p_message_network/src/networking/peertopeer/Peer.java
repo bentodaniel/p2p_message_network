@@ -31,7 +31,10 @@ public class Peer {
         try {
             this.username = username;
             this.port = port;
-            this.address = Inet4Address.getLocalHost().getHostAddress() + ":" + port;
+            this.address = Utils.getPublicIP() + ":" + port;
+            // this does not work with real server
+
+            System.out.println(Utils.getPublicIP());
 
             this.serverSide = new ServerSide(port, this);
             this.serverSide.start();

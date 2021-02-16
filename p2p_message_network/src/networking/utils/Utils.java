@@ -1,7 +1,11 @@
 package networking.utils;
 
 import javax.json.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,5 +80,15 @@ public class Utils {
             return new String[]{};
         }
         return list.toArray(new String[0]);
+    }
+
+    public static String getPublicIP() throws IOException {
+        // Use a webservice like AWS
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                whatismyip.openStream()));
+
+        String ip = in.readLine(); //you get the IP as a String
+        return ip;
     }
 }
